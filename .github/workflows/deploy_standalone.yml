@@ -34,6 +34,7 @@ jobs:
         mamba list
         echo $PATH
         PYODIDE_EMSCRIPTEN_VERSION=$(pyodide config get emscripten_version)
+        emsdk update
         emsdk install ${PYODIDE_EMSCRIPTEN_VERSION}
         emsdk activate ${PYODIDE_EMSCRIPTEN_VERSION}
         source "$CONDA_PREFIX/lib/python${{ matrix.python-version }}/site-packages/emsdk/emsdk_env.sh"
