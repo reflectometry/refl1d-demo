@@ -8,8 +8,8 @@ import type { Server as FitServer } from './standalone_fit_worker';
 
 const DEBUG = true;
 
-declare const REFL1D_WHEEL_FILE: string;
-declare const BUMPS_WHEEL_FILE: string;
+//declare const REFL1D_WHEEL_FILE: string;
+//declare const BUMPS_WHEEL_FILE: string;
 
 async function loadPyodideBase() {
     return await loadPyodide({
@@ -25,16 +25,17 @@ async function doPipInstalls(pyodide: PyodideInterface) {
     await pyodide.runPythonAsync(`
     import micropip
     await micropip.install([
-        "matplotlib",
-        "plotly",
-        "mpld3",
-        "periodictable",
-        "blinker",
-        "dill",
+        #"matplotlib",
+        #"plotly",
+        #"mpld3",
+        #"periodictable",
+        #"blinker",
+        #"dill",
+        "bumps>=1.0.0a0",
+        "refl1d>=1.0.0a0",
     ])
-    await micropip.install("../wheels/${BUMPS_WHEEL_FILE}")
-    await micropip.install("../wheels/${REFL1D_WHEEL_FILE}", keep_going=True, deps=False)
-
+    #await micropip.install("../wheels/\${BUMPS_WHEEL_FILE}")
+    #await micropip.install("../wheels/\${REFL1D_WHEEL_FILE}", keep_going=True, deps=False)
     `);
 }
 
