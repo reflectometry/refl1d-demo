@@ -38,55 +38,54 @@ jobs:
         emsdk install ${PYODIDE_EMSCRIPTEN_VERSION}
         emsdk activate ${PYODIDE_EMSCRIPTEN_VERSION}
         source "$CONDA_PREFIX/lib/python${{ matrix.python-version }}/site-packages/emsdk/emsdk_env.sh"
-    # - name: Install bumps and refl1d packages
-    #   run: |
-    #     pip install "bumps>=1.0.0a0" "refl1d>=1.0.0a0"
-    #     git clone https://github.com/bumps/bumps
-    #     git clone https://github.com/reflectometry/refl1d
-    # - name: Build bumps
-    #   run: |
-    #     cd bumps
-    #     python setup.py bdist_wheel
-    #     echo "BUMPS_DIST=$(realpath dist)" >> $GITHUB_ENV
-    #     echo "BUMPS_WHEEL_FILE=$(ls dist)" >> $GITHUB_ENV
-    # - name: Build refl1d
-    #   run: |
-    #     source "$CONDA_PREFIX/lib/python${{ matrix.python-version }}/site-packages/emsdk/emsdk_env.sh"
-    #     cd refl1d
-    #     BUILD_EXTENSION=True pyodide build
-    #     echo "REFL1D_DIST=$(realpath dist)" >> $GITHUB_ENV
-    #     echo "REFL1D_WHEEL_FILE=$(ls dist)" >> $GITHUB_ENV
-    # - name: Use Node.js ${{ matrix.node-version }}
-    #   uses: actions/setup-node@v3
-    #   with:
-    #     node-version: ${{ matrix.node-version }}
-    # - name: initialize bumps client
-    #   run: |
-    #     npm i
-    #     npm link
-    #   working-directory: bumps/bumps/webview/client
-    # - name: initialize refl1d client
-    #   run: |
-    #     npm i
-    #     npm link
-    #     npm link bumps-webview-client
-    #   working-directory: refl1d/refl1d/webview/client
+    - name: Clone git repos
+      run: |
+        git clone https://github.com/bumps/bumps
+        git clone https://github.com/reflectometry/refl1d
+    - name: Build bumps
+      run: |
+        cd bumps
+        python setup.py bdist_wheel
+        echo "BUMPS_DIST=$(realpath dist)" >> $GITHUB_ENV
+        echo "BUMPS_WHEEL_FILE=$(ls dist)" >> $GITHUB_ENV
+    - name: Build refl1d
+      run: |
+        source "$CONDA_PREFIX/lib/python${{ matrix.python-version }}/site-packages/emsdk/emsdk_env.sh"
+        cd refl1d
+        BUILD_EXTENSION=True pyodide build
+        echo "REFL1D_DIST=$(realpath dist)" >> $GITHUB_ENV
+        echo "REFL1D_WHEEL_FILE=$(ls dist)" >> $GITHUB_ENV
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: initialize bumps client
+      run: |
+        npm i
+        npm link
+      working-directory: bumps/bumps/webview/client
+    - name: initialize refl1d client
+      run: |
+        npm i
+        npm link
+        npm link bumps-webview-client
+      working-directory: refl1d/refl1d/webview/client
     - name: npm initialize self
       run: |
         npm i
-    #    npm link bumps-webview-client
-    #    npm link refl1d-webview-client
-    # - name: build client
-    #   id: build_client
-    #   run: |
-    #     mkdir -p public/wheels
-    #     cp $BUMPS_DIST/$BUMPS_WHEEL_FILE public/wheels/
-    #     cp $REFL1D_DIST/$REFL1D_WHEEL_FILE public/wheels/
-    #     rm -rf dist
-    #     npm run build
-    #     echo "deploy_path=$(realpath dist)" >> $GITHUB_OUTPUT
-    #   env:
-    #      CI: ""
+        npm link bumps-webview-client
+        npm link refl1d-webview-client
+    - name: build client
+      id: build_client
+      run: |
+        mkdir -p public/wheels
+        cp $BUMPS_DIST/$BUMPS_WHEEL_FILE public/wheels/
+        cp $REFL1D_DIST/$REFL1D_WHEEL_FILE public/wheels/
+        rm -rf dist
+        npm run build
+        echo "deploy_path=$(realpath dist)" >> $GITHUB_OUTPUT
+      env:
+         CI: ""
     
     - name: Upload pages artifact client artifact
       uses: actions/upload-pages-artifact@v3.0.1
