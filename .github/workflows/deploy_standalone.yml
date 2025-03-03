@@ -40,8 +40,8 @@ jobs:
         source "$CONDA_PREFIX/lib/python${{ matrix.python-version }}/site-packages/emsdk/emsdk_env.sh"
     - name: Clone git repos
       run: |
-        git clone -b webview --single-branch https://github.com/bumps/bumps
-        git clone -b webview --single-branch https://github.com/reflectometry/refl1d
+        git clone https://github.com/bumps/bumps
+        git clone https://github.com/reflectometry/refl1d
     - name: Build bumps
       run: |
         cd bumps
