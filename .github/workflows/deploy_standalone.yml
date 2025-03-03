@@ -76,6 +76,13 @@ jobs:
         npm i
     #    npm link bumps-webview-client
     #    npm link refl1d-webview-client
+    - name: build client
+      id: build_client
+      run: |
+        npm run build
+        echo "deploy_path=$(realpath dist)" >> $GITHUB_OUTPUT
+      env:
+         CI: ""
     # - name: build client
     #   id: build_client
     #   run: |
@@ -87,7 +94,7 @@ jobs:
     #     echo "deploy_path=$(realpath dist)" >> $GITHUB_OUTPUT
     #   env:
     #      CI: ""
-    
+
     - name: Upload pages artifact client artifact
       uses: actions/upload-pages-artifact@v3.0.1
       with:
